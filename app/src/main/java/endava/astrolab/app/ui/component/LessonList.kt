@@ -78,7 +78,7 @@ fun LessonItem(lesson: Lesson, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-private fun FavoriteButtonPreview() {
+private fun LessonListPreview() {
     LessonList(lessons)
     // LessonItem(lessons[0], Modifier.height(110.dp))
 }
