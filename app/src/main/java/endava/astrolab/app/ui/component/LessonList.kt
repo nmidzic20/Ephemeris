@@ -21,17 +21,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import endava.astrolab.app.mock.lessons
 import endava.astrolab.app.ui.theme.spacing
 
 data class Lesson(val title: String, val completed: Boolean)
-val lessons = listOf(
-    Lesson("Lesson 1", false),
-    Lesson("Lesson 2", true),
-    Lesson("Lesson 3", true),
-    Lesson("Lesson 4", false),
-    Lesson("Lesson 5", false),
-    Lesson("Lesson 6", false),
-)
 
 @Composable
 fun LessonList(lessons: List<Lesson>, modifier: Modifier = Modifier) {
@@ -80,5 +73,4 @@ fun LessonItem(lesson: Lesson, modifier: Modifier = Modifier) {
 @Composable
 private fun LessonListPreview() {
     LessonList(lessons)
-    // LessonItem(lessons[0], Modifier.height(110.dp))
 }
