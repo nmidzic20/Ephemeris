@@ -48,7 +48,7 @@ fun Alert(showDialog: MutableState<Boolean>, alertDialogData: AlertDialogData) {
                     ) {
                         Text(
                             alertDialogData.dismissButtonText
-                                ?: stringResource(R.string.cancelButtonText)
+                                ?: stringResource(R.string.cancel)
                         )
                     }
                 }

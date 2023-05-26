@@ -22,8 +22,8 @@ val homeViewState = homeMapper.toHomeViewState(LessonsMock.getLessonsList())
 
 @Composable
 fun HomeRoute(
-    /*onNavigateToLesson: (Int) -> Unit,
-    viewModel: HomeViewModel*/
+    onNavigateToLesson: (Int) -> Unit,
+    //viewModel: HomeViewModel
 ) {
     // val homeViewState: HomeViewState by viewModel.homeViewState.collectAsState()
 
