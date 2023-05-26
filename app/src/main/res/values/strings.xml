@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Astrolab</string>
+    <string name="cancelButtonText">Cancel</string>
 </resources>

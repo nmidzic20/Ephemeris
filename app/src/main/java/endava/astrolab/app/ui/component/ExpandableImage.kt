@@ -52,7 +52,7 @@ fun ExpandableImage(
         mutableStateOf(largePadding)
     }
 
-    val transitionDurationMilis = 1000
+    val transitionDurationMilis = 900
 
     val animateHeight by animateDpAsState(
         targetValue = height,

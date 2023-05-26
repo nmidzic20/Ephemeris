@@ -1,15 +1,14 @@
 package endava.astrolab.app.ui.component
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -19,27 +18,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import endava.astrolab.app.mock.lessons
+import endava.astrolab.app.ui.theme.DarkGreen
+import endava.astrolab.app.ui.theme.DarkRed
 import endava.astrolab.app.ui.theme.spacing
 
-data class Lesson(val title: String, val completed: Boolean)
-
+data class LessonItemViewState(val title: String, val isCompleted: Boolean)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LessonList(lessons: List<Lesson>, modifier: Modifier = Modifier) {
-    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
-        lessons.forEach { student ->
-            LessonItem(student, Modifier.height(110.dp))
-        }
-    }
-}
-@Composable
-fun LessonItem(lesson: Lesson, modifier: Modifier = Modifier) {
+fun LessonItem(lessonItemViewState: LessonItemViewState, onClick: () -> Unit, onLongClick: () -> Unit, modifier: Modifier = Modifier) {
 
     val coloredSurfaceWidth = MaterialTheme.spacing.large
-    var cardColor = if (lesson.completed) Color(0xFF013220) else Color(0xFF8b0000)
-    var subtitle = if (lesson.completed) "Completed" else ""
+    var cardColor = if (lessonItemViewState.isCompleted) DarkGreen else DarkRed
+    var subtitle = if (lessonItemViewState.isCompleted) "Completed" else ""
 
     Box(
         modifier = modifier
@@ -49,11 +41,15 @@ fun LessonItem(lesson: Lesson, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxSize()
                 .align(Alignment.Center)
+                .combinedClickable(
+                    onClick = onClick,
+                    onLongClick = onLongClick,
+                )
         ) {
             Column(
                 modifier = Modifier.padding(start = coloredSurfaceWidth + MaterialTheme.spacing.medium)
             ) {
-                Text(lesson.title, fontSize = 25.sp, fontWeight = FontWeight.W700, modifier = Modifier.padding(MaterialTheme.spacing.medium))
+                Text(lessonItemViewState.title, fontSize = 16.sp, fontWeight = FontWeight.W700, modifier = Modifier.padding(MaterialTheme.spacing.medium))
                 Text(subtitle, color = Color.Gray, modifier = Modifier.padding(start = MaterialTheme.spacing.medium))
             }
         }
@@ -71,6 +67,6 @@ fun LessonItem(lesson: Lesson, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-private fun LessonListPreview() {
-    LessonList(lessons)
+private fun LessonItemPreview() {
+    LessonItem(LessonItemViewState(lessons[0].title, lessons[0].isCompleted), {}, {})
 }
