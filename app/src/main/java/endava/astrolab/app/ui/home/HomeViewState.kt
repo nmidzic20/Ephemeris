@@ -7,4 +7,4 @@ data class HomeLessonViewState(
     val lessonItemViewState: LessonItemViewState
 )
 
-data class HomeViewState(val homeMovieViewStateList: List<HomeLessonViewState>)
+data class HomeViewState(val homeLessonViewStateList: List<HomeLessonViewState>)

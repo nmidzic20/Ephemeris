@@ -23,27 +23,24 @@ val homeViewState = homeMapper.toHomeViewState(LessonsMock.getLessonsList())
 @Composable
 fun HomeRoute(
     onNavigateToLesson: (Int) -> Unit,
-    //viewModel: HomeViewModel
+    // viewModel: HomeViewModel
 ) {
     // val homeViewState: HomeViewState by viewModel.homeViewState.collectAsState()
 
     HomeScreen(
-        homeViewState
+        homeViewState = homeViewState,
+        onLessonClick = onNavigateToLesson
     )
 }
 
 @Composable
 fun HomeScreen(
     homeViewState: HomeViewState,
-    /*onLessonClick: (Int) -> Unit,
-    * onLessonLongClick: (Int) -> Unit,*/
+    onLessonClick: (Int) -> Unit,
+    // onLessonLongClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val lessons = homeViewState.homeMovieViewStateList
-
-    val onLessonClick = { id: Int ->
-        println("Open webview for lesson $id")
-    }
+    val lessons = homeViewState.homeLessonViewStateList
 
     val showDialog = remember { mutableStateOf(false) }
     val selectedLesson = remember { mutableStateOf(LessonsMock.getLessonsList()[0]) }
@@ -84,5 +81,8 @@ fun HomeScreen(
 @Preview
 @Composable
 fun HomeScreenPreview() {
-    HomeScreen(homeViewState = homeViewState)
+    val onLessonClick = { id: Int ->
+        println("Open webview for lesson $id")
+    }
+    HomeScreen(homeViewState = homeViewState, onLessonClick)
 }

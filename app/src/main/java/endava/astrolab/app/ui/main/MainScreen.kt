@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -40,7 +39,9 @@ import endava.astrolab.app.R
 import endava.astrolab.app.navigation.LESSON_ID_KEY
 import endava.astrolab.app.navigation.LessonDestination
 import endava.astrolab.app.navigation.NavigationItem
+import endava.astrolab.app.ui.dailyimage.DailyImageRoute
 import endava.astrolab.app.ui.home.HomeRoute
+import endava.astrolab.app.ui.lesson.LessonRoute
 import endava.astrolab.app.ui.theme.spacing
 
 @Composable
@@ -105,12 +106,12 @@ fun MainScreen() {
                             val lessonRoute = LessonDestination.createNavigationRoute(lessonId)
                             navController.navigate(lessonRoute)
                         },
-                        //viewModel = getViewModel()
+                        // viewModel = getViewModel()
                     )
                 }
                 composable(NavigationItem.DailyImageDestination.route) {
                     DailyImageRoute(
-                        //viewModel = getViewModel<FavoritesViewModel>()
+                        // viewModel = getViewModel<DailyImageViewModel>()
                     )
                 }
                 composable(
@@ -122,7 +123,7 @@ fun MainScreen() {
                         parametersOf(selectedLessonId)
                     })*/
                     LessonRoute(
-                        //viewModel = lessonViewModel
+                        // viewModel = lessonViewModel
                     )
                 }
             }
