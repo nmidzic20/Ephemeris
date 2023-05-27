@@ -149,7 +149,7 @@ private fun TopBar(
                     .fillMaxWidth()
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.astrolab_logo),
+                    painter = painterResource(id = R.drawable.astrolab),
                     contentDescription = stringResource(R.string.astrolab_logo),
                 )
             }
