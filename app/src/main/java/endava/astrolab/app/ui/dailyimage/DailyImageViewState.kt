@@ -6,6 +6,10 @@ data class ImageViewState(
     val explanation: String,
     val copyright: String?,
     val date: String?
-)
+) {
+    companion object {
+        val EMPTY = ImageViewState(title = "", imageUrl = "", explanation = "", copyright = "", date = "")
+    }
+}
 
 data class DailyImageViewState(val imageViewState: ImageViewState)

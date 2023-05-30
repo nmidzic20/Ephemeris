@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlin_version"
+    id 'kotlin-kapt'
     id 'org.jlleitschuh.gradle.ktlint' version "11.0.0"
 }
 
