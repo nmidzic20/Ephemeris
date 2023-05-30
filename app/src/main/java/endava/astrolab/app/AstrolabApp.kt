@@ -3,6 +3,7 @@ package endava.astrolab.app
 import android.app.Application
 import android.util.Log
 import endava.astrolab.app.data.di.dataModule
+import endava.astrolab.app.data.di.networkModule
 import endava.astrolab.app.ui.dailyimage.di.dailyImageModule
 import endava.astrolab.app.ui.home.di.homeModule
 import endava.astrolab.app.ui.lesson.di.lessonModule
@@ -17,6 +18,7 @@ class AstrolabApp : Application() {
             androidContext(this@AstrolabApp)
             modules(
                 dataModule,
+                networkModule,
                 lessonModule,
                 dailyImageModule,
                 homeModule
