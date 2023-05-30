@@ -4,9 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -17,19 +15,19 @@ import endava.astrolab.app.ui.component.LessonItem
 import endava.astrolab.app.ui.home.mapper.HomeMapper
 import endava.astrolab.app.ui.home.mapper.HomeMapperImpl
 
-private val homeMapper: HomeMapper = HomeMapperImpl()
-val homeViewState = homeMapper.toHomeViewState(LessonsMock.getLessonsList())
 
 @Composable
 fun HomeRoute(
     onNavigateToLesson: (Int) -> Unit,
-    // viewModel: HomeViewModel
+    viewModel: HomeViewModel
 ) {
-    // val homeViewState: HomeViewState by viewModel.homeViewState.collectAsState()
+    val homeViewState: HomeViewState by viewModel.homeViewState.collectAsState()
 
     HomeScreen(
         homeViewState = homeViewState,
-        onLessonClick = onNavigateToLesson
+        onLessonClick = onNavigateToLesson,
+        onLessonLongClick = viewModel::onLessonLongClick,
+        //onCompletedClick = viewModel::onCompletedClick
     )
 }
 
@@ -37,20 +35,23 @@ fun HomeRoute(
 fun HomeScreen(
     homeViewState: HomeViewState,
     onLessonClick: (Int) -> Unit,
-    // onLessonLongClick: (Int) -> Unit,
+    onLessonLongClick: (Int) -> Unit,
+    //onCompletedClick : (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val lessons = homeViewState.homeLessonViewStateList
+    val homeLessonViewStateList = homeViewState.homeLessonViewStateList
+    val alertData = homeViewState.alertDialogData
 
-    val showDialog = remember { mutableStateOf(false) }
+    /*val showDialog = remember { mutableStateOf(false) }
     val selectedLesson = remember { mutableStateOf(LessonsMock.getLessonsList()[0]) }
 
     var alertDialogData = AlertDialogData(
+        showDialog,
         selectedLesson.value.title,
         "Lesson ${selectedLesson.value.id}",
         "Mark as ${if (selectedLesson.value.isCompleted) "incomplete" else "complete"}",
         {
-            // Change isComplete property of new object lesson
+            onCompletedClick(selectedLesson.value.id)
             showDialog.value = false
         },
         "Cancel",
@@ -62,12 +63,13 @@ fun HomeScreen(
     val onLessonLongClick = { id: Int ->
         selectedLesson.value = LessonsMock.getLessonsList().first { lesson -> lesson.id == id }
         showDialog.value = true
-    }
+    }*/
 
-    Alert(showDialog = showDialog, alertDialogData = alertDialogData)
+    //Alert(showDialog = showDialog, alertDialogData = alertDialogData)
+    Alert(alertDialogData = alertData)
 
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
-        lessons.forEach { lesson ->
+        homeLessonViewStateList.forEach { lesson ->
             LessonItem(
                 lesson.lessonItemViewState,
                 { onLessonClick(lesson.id) },
@@ -84,5 +86,8 @@ fun HomeScreenPreview() {
     val onLessonClick = { id: Int ->
         println("Open webview for lesson $id")
     }
-    HomeScreen(homeViewState = homeViewState, onLessonClick)
+    val homeMapper: HomeMapper = HomeMapperImpl()
+    //val homeViewState = homeMapper.toHomeViewState(LessonsMock.getLessonsList())
+
+    //HomeScreen(homeViewState = homeViewState, onLessonClick, {}, {})
 }

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface LessonRepository {
     fun lessons(): Flow<List<Lesson>>
-    //fun lessonContent(lessonId: Int): LessonContent
+    suspend fun lesson(lessonId: Int): Lesson
     fun completedLessons(): Flow<List<Lesson>>
     suspend fun addLessonToCompleted(lessonId: Int)
     suspend fun removeLessonFromCompleted(lessonId: Int)

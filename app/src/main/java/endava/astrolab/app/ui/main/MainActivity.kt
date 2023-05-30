@@ -1,4 +1,4 @@
-package endava.astrolab.app
+package endava.astrolab.app.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

@@ -4,14 +4,15 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import endava.astrolab.app.R
+import kotlinx.coroutines.flow.StateFlow
 
 data class AlertDialogData(
+    val show : Boolean,
     val title: String,
     val content: String,
     val confirmButtonText: String,
@@ -21,12 +22,12 @@ data class AlertDialogData(
 )
 
 @Composable
-fun Alert(showDialog: MutableState<Boolean>, alertDialogData: AlertDialogData) {
-    if (showDialog.value) {
+fun Alert(/*showDialog: MutableState<Boolean>, */alertDialogData: AlertDialogData) {
+    if (alertDialogData.show) {
 
         AlertDialog(
             onDismissRequest = {
-                showDialog.value = false
+                //toggleDialog()
             },
             title = {
                 Text(text = alertDialogData.title)
@@ -57,27 +58,4 @@ fun Alert(showDialog: MutableState<Boolean>, alertDialogData: AlertDialogData) {
     }
 }
 
-@Preview
-@Composable
-fun AlertDialogPreview() {
-    val showDialog = remember { mutableStateOf(false) }
 
-    val alertDialogData = AlertDialogData(
-        "Title",
-        "This is content",
-        "OK",
-        {
-            showDialog.value = false
-        },
-        null,
-        null
-    )
-
-    Button(onClick = {
-        showDialog.value = true
-    }) {
-        Text("Click me")
-    }
-
-    Alert(showDialog, alertDialogData)
-}

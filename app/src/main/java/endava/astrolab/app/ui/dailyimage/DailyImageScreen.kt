@@ -17,9 +17,9 @@ val dailyImageViewState = dailyImageMapper.toDailyImageViewState(DailyImageMock.
 
 @Composable
 fun DailyImageRoute(
-    // viewModel: DailyImageViewModel
+    viewModel: DailyImageViewModel
 ) {
-    // val dailyImageViewState: DailyImageViewState by viewModel.dailyImageViewState.collectAsState()
+    //val dailyImageViewState: DailyImageViewState by viewModel.dailyImageViewState.collectAsState()
 
     DailyImageScreen(
         dailyImageViewState

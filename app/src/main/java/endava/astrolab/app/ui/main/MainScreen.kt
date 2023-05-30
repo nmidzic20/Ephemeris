@@ -40,9 +40,13 @@ import endava.astrolab.app.navigation.LESSON_ID_KEY
 import endava.astrolab.app.navigation.LessonDestination
 import endava.astrolab.app.navigation.NavigationItem
 import endava.astrolab.app.ui.dailyimage.DailyImageRoute
+import endava.astrolab.app.ui.dailyimage.DailyImageViewModel
 import endava.astrolab.app.ui.home.HomeRoute
 import endava.astrolab.app.ui.lesson.LessonRoute
+import endava.astrolab.app.ui.lesson.LessonViewModel
 import endava.astrolab.app.ui.theme.spacing
+import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MainScreen() {
@@ -106,12 +110,12 @@ fun MainScreen() {
                             val lessonRoute = LessonDestination.createNavigationRoute(lessonId)
                             navController.navigate(lessonRoute)
                         },
-                        // viewModel = getViewModel()
+                        viewModel = getViewModel()
                     )
                 }
                 composable(NavigationItem.DailyImageDestination.route) {
                     DailyImageRoute(
-                        // viewModel = getViewModel<DailyImageViewModel>()
+                        viewModel = getViewModel<DailyImageViewModel>()
                     )
                 }
                 composable(
@@ -119,11 +123,11 @@ fun MainScreen() {
                     arguments = listOf(navArgument(LESSON_ID_KEY) { type = NavType.IntType }),
                 ) {
                     val selectedLessonId = it.arguments?.getInt(LESSON_ID_KEY) ?: throw IllegalStateException("Lesson ID is null")
-                    /*val lessonViewModel: LessonViewModel = getViewModel(parameters = {
+                    val lessonViewModel: LessonViewModel = getViewModel(parameters = {
                         parametersOf(selectedLessonId)
-                    })*/
+                    })
                     LessonRoute(
-                        // viewModel = lessonViewModel
+                        viewModel = lessonViewModel
                     )
                 }
             }

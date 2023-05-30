@@ -4,4 +4,10 @@ data class LessonContentViewState(
     val content: String
 )
 
-data class LessonViewState(val lessonContentViewState: LessonContentViewState)
+data class LessonViewState(val lessonContentViewState: LessonContentViewState) {
+    companion object {
+        val EMPTY = LessonViewState(
+            LessonContentViewState(content = "")
+        )
+    }
+}
