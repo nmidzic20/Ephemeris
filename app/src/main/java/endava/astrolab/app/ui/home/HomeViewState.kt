@@ -1,6 +1,6 @@
 package endava.astrolab.app.ui.home
 
-import endava.astrolab.app.ui.component.AlertDialogData
+import endava.astrolab.app.ui.component.AlertDialogViewState
 import endava.astrolab.app.ui.component.LessonItemViewState
 
 data class HomeLessonViewState(
@@ -8,4 +8,4 @@ data class HomeLessonViewState(
     val lessonItemViewState: LessonItemViewState,
 )
 
-data class HomeViewState(val homeLessonViewStateList: List<HomeLessonViewState>, val alertDialogData: AlertDialogData)
+data class HomeViewState(val homeLessonViewStateList: List<HomeLessonViewState>, val alertDialogDataViewState: AlertDialogViewState)

@@ -4,51 +4,51 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import endava.astrolab.app.R
-import kotlinx.coroutines.flow.StateFlow
 
-data class AlertDialogData(
-    val show : Boolean,
+data class AlertDialogViewState(
+    val show: Boolean,
     val title: String,
     val content: String,
     val confirmButtonText: String,
     val onConfirmClick: () -> Unit,
     val dismissButtonText: String?,
     val onDismissClick: (() -> Unit)?,
-)
+) {
+    companion object {
+        val EMPTY = AlertDialogViewState(false, "", "", "", {}, "", {})
+    }
+}
 
 @Composable
-fun Alert(/*showDialog: MutableState<Boolean>, */alertDialogData: AlertDialogData) {
-    if (alertDialogData.show) {
+fun Alert(alertDialogViewState: AlertDialogViewState) {
+    if (alertDialogViewState.show) {
 
         AlertDialog(
             onDismissRequest = {
-                //toggleDialog()
+                alertDialogViewState.onDismissClick?.let { it() }
             },
             title = {
-                Text(text = alertDialogData.title)
+                Text(text = alertDialogViewState.title)
             },
             text = {
-                Text(alertDialogData.content)
+                Text(alertDialogViewState.content)
             },
             confirmButton = {
                 Button(
-                    onClick = alertDialogData.onConfirmClick
+                    onClick = alertDialogViewState.onConfirmClick
                 ) {
-                    Text(alertDialogData.confirmButtonText)
+                    Text(alertDialogViewState.confirmButtonText)
                 }
             },
             dismissButton = {
-                alertDialogData.onDismissClick?.let {
+                alertDialogViewState.onDismissClick?.let {
                     Button(
                         onClick = it
                     ) {
                         Text(
-                            alertDialogData.dismissButtonText
+                            alertDialogViewState.dismissButtonText
                                 ?: stringResource(R.string.cancel)
                         )
                     }
@@ -57,5 +57,3 @@ fun Alert(/*showDialog: MutableState<Boolean>, */alertDialogData: AlertDialogDat
         )
     }
 }
-
-

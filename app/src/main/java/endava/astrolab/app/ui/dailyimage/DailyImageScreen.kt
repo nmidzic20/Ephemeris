@@ -19,7 +19,7 @@ val dailyImageViewState = dailyImageMapper.toDailyImageViewState(DailyImageMock.
 fun DailyImageRoute(
     viewModel: DailyImageViewModel
 ) {
-    //val dailyImageViewState: DailyImageViewState by viewModel.dailyImageViewState.collectAsState()
+    // val dailyImageViewState: DailyImageViewState by viewModel.dailyImageViewState.collectAsState()
 
     DailyImageScreen(
         dailyImageViewState

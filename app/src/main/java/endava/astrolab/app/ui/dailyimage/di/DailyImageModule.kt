@@ -8,9 +8,7 @@ import org.koin.dsl.module
 
 val dailyImageModule = module {
     viewModel {
-        DailyImageViewModel(
-
-        )
+        DailyImageViewModel()
     }
     single<DailyImageMapper> { DailyImageMapperImpl() }
 }

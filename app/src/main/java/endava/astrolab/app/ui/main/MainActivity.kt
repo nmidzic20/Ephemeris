@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
-import endava.astrolab.app.ui.main.MainScreen
 import endava.astrolab.app.ui.theme.AstrolabAppTheme
 
 class MainActivity : ComponentActivity() {

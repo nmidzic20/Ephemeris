@@ -4,11 +4,15 @@ import endava.astrolab.app.mock.CompletedLessonsDbMock
 import endava.astrolab.app.mock.LessonsMock
 import endava.astrolab.app.model.Lesson
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.withContext
 
 class FakeLessonRepositoryImpl(
-    //private val lessonDao: CompletedLessonDAO,
+    // private val lessonDao: CompletedLessonDAO,
     private val bgDispatcher: CoroutineDispatcher
 ) : LessonRepository {
 
@@ -23,7 +27,7 @@ class FakeLessonRepositoryImpl(
         }
         .flowOn(bgDispatcher)
 
-    override suspend fun lesson(lessonId : Int) = lessons.map { it ->
+    override suspend fun lesson(lessonId: Int) = lessons.map { it ->
         it.first { lesson -> lessonId == lesson.id }
     }.first()
 

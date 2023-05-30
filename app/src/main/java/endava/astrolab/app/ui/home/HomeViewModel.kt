@@ -3,11 +3,17 @@ package endava.astrolab.app.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import endava.astrolab.app.data.repository.LessonRepository
-import endava.astrolab.app.mock.LessonsMock
 import endava.astrolab.app.model.Lesson
-import endava.astrolab.app.ui.component.AlertDialogData
+import endava.astrolab.app.ui.component.AlertDialogViewState
 import endava.astrolab.app.ui.home.mapper.HomeMapper
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -15,12 +21,14 @@ class HomeViewModel(
     homeScreenMapper: HomeMapper,
 ) : ViewModel() {
 
-    val showDialog = MutableStateFlow(false)
+    private val showDialog = MutableStateFlow(false)
     private val selectedLesson = MutableStateFlow(Lesson.EMPTY)
-    val _alertDialogData =
+    private var initialAlertDialogData: AlertDialogViewState = AlertDialogViewState.EMPTY
+
+    private val alertDialogViewState: StateFlow<AlertDialogViewState> =
         showDialog.flatMapLatest { showDialog ->
             selectedLesson.mapLatest { selectedLesson ->
-                AlertDialogData(
+                AlertDialogViewState(
                     showDialog,
                     selectedLesson.title,
                     "Lesson ${selectedLesson.id}",
@@ -35,14 +43,15 @@ class HomeViewModel(
                     },
                 )
             }
-        }
-
-    var initialAlertDialogData : AlertDialogData = AlertDialogData(false, "","","",{},"",{})
-
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(1000),
+            initialValue = initialAlertDialogData,
+        )
 
     val homeViewState: StateFlow<HomeViewState> =
-        _alertDialogData
-            .flatMapLatest {alertDialogData ->
+        alertDialogViewState
+            .flatMapLatest { alertDialogData ->
                 lessonRepository
                     .lessons()
                     .map { lessons ->
@@ -54,30 +63,18 @@ class HomeViewModel(
                 initialValue = HomeViewState(emptyList(), initialAlertDialogData),
             )
 
-    fun onCompletedClick(lessonId: Int) {
-        println("Completed / incompleted for lesson ${lessonId}")
+    fun onLessonLongClick(lessonId: Int) {
+        viewModelScope.launch {
+            selectedLesson.update { lessonRepository.lesson(lessonId) }
+        }
+        toggleAlertDialog()
+    }
+
+    private fun onCompletedClick(lessonId: Int) {
         viewModelScope.launch { lessonRepository.toggleCompleted(lessonId) }
     }
 
-    fun toggleAlertDialog() {
-        println("Before toggle ${showDialog.value}")
+    private fun toggleAlertDialog() {
         showDialog.update { show -> !show }
-        println("After toggle ${showDialog.value}")
-
-    }
-
-    fun onLessonLongClick(lessonId : Int) {
-        println(lessonId)
-        viewModelScope.launch {
-            selectedLesson.update { lessonRepository.lesson(lessonId) }
-            println("Selected lesson is now ${selectedLesson.value}")
-            toggleAlertDialog()
-            println("show dialog is now ${showDialog.value}")
-            println("_alert dialog data is now ${_alertDialogData.first().show} ${_alertDialogData.first().title}")
-            //alertDialogData = _alertDialogData.first()
-            //println("alert dialog data is now ${alertDialogData.show} ${alertDialogData.title}")
-
-        }
-        //toggleAlertDialog()
     }
 }
