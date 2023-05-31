@@ -1,28 +1,33 @@
 package endava.astrolab.app.data.repository
 
+import endava.astrolab.app.data.database.LessonDAO
 import endava.astrolab.app.mock.CompletedLessonsDbMock
 import endava.astrolab.app.mock.LessonsMock
 import endava.astrolab.app.model.Lesson
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.withContext
 
 class FakeLessonRepositoryImpl(
-    // private val lessonDao: CompletedLessonDAO,
+    private val lessonDao: LessonDAO,
     private val bgDispatcher: CoroutineDispatcher
 ) : LessonRepository {
 
-    private val fakeLessons = LessonsMock.getLessonsList().toMutableList()
+    private val dbLessonList = lessonDao.lessons()//LessonsMock.getLessonsList().toMutableList()
 
     private val lessons: Flow<List<Lesson>> = CompletedLessonsDbMock.completedIds
-        .mapLatest { completedIds ->
-            fakeLessons.map {
-                val isCompleted = it.id in completedIds
-                Lesson(it.id, it.title, it.content, isCompleted)
+        .flatMapLatest { completedIds ->
+            dbLessonList.map {
+                it.map { dbLesson ->
+                    Lesson(
+                        id = dbLesson.id,
+                        title = dbLesson.title,
+                        content = dbLesson.content,
+                        isCompleted = dbLesson.id in completedIds
+                    )
+                }
+                //val isCompleted = it.id in completedIds
+                //Lesson(it.id, it.title, it.content, isCompleted)
             }
         }
         .flowOn(bgDispatcher)
