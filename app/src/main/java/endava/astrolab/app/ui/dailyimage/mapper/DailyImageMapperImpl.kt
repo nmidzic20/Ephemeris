@@ -23,8 +23,7 @@ class DailyImageMapperImpl : DailyImageMapper {
         return DailyImageViewState(imageViewState)
     }
 
-    private fun extractVideoId(url : String) : String
-    {
+    private fun extractVideoId(url: String): String {
         val pattern = "(?<=youtu.be/|watch\\?v=|/videos/|embed\\/)[^#\\&\\?]*"
         val compiledPattern: Pattern = Pattern.compile(pattern)
         val matcher: Matcher = compiledPattern.matcher(url)
