@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import endava.astrolab.app.ui.component.ExpandableImage
 import endava.astrolab.app.ui.component.TextCard
+import endava.astrolab.app.ui.component.YoutubeScreen
 
 @Composable
 fun DailyImageRoute(
@@ -29,10 +30,13 @@ fun DailyImageScreen(
     val dailyImage = dailyImageViewState.imageViewState
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        ExpandableImage(
-            dailyImage.imageUrl,
-            modifier = Modifier
-        )
+        if (dailyImageViewState.imageViewState.mediaType != "video")
+            ExpandableImage(
+                dailyImage.imageUrl,
+                modifier = Modifier
+            )
+        else
+            dailyImage.videoId?.let { YoutubeScreen(videoId = it, modifier = Modifier) }
         TextCard(title = dailyImage.title, content = dailyImage.explanation)
     }
 }

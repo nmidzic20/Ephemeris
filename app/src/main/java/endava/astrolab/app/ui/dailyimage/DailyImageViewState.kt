@@ -5,10 +5,12 @@ data class ImageViewState(
     val imageUrl: String,
     val explanation: String,
     val copyright: String?,
-    val date: String?
+    val date: String?,
+    val mediaType: String?,
+    val videoId: String?
 ) {
     companion object {
-        val EMPTY = ImageViewState(title = "", imageUrl = "", explanation = "", copyright = "", date = "")
+        val EMPTY = ImageViewState(title = "", imageUrl = "", explanation = "", copyright = "", date = "", mediaType = "", videoId = "")
     }
 }
 

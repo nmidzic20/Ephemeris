@@ -29,6 +29,7 @@ data class DailyImageResponse(
         date = date,
         url = url,
         hdurl = hdurl,
-        explanation = explanation
+        explanation = explanation,
+        mediaType = mediaType,
     )
 }

@@ -6,5 +6,6 @@ data class DailyImage(
     var explanation: String?,
     var hdurl: String?,
     var title: String?,
-    var url: String?
+    var url: String?,
+    var mediaType: String?,
 )
