@@ -8,5 +8,4 @@ import kotlinx.coroutines.flow.Flow
 interface LessonDAO {
     @Query("SELECT * FROM lesson")
     fun lessons(): Flow<List<DbLesson>>
-
 }

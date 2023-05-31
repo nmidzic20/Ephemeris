@@ -1,6 +1,7 @@
 package endava.astrolab.app.data.di
 
 import endava.astrolab.app.data.database.AstrolabDatabase
+import endava.astrolab.app.data.database.CompletedLessonDAO
 import endava.astrolab.app.data.database.LessonDAO
 import endava.astrolab.app.data.repository.DailyImageRepository
 import endava.astrolab.app.data.repository.DailyImageRepositoryImpl
@@ -14,8 +15,12 @@ val dataModule = module {
         val database = get<AstrolabDatabase>()
         database.lessonDao()
     }
+    single<CompletedLessonDAO> {
+        val database = get<AstrolabDatabase>()
+        database.completedLessonDao()
+    }
     single<LessonRepository> {
-        FakeLessonRepositoryImpl(lessonDao = get(), bgDispatcher = Dispatchers.IO)
+        FakeLessonRepositoryImpl(lessonDao = get(), completedLessonDAO = get(), bgDispatcher = Dispatchers.IO)
     }
     single<DailyImageRepository> {
         DailyImageRepositoryImpl(dailyImageService = get(), bgDispatcher = Dispatchers.IO)

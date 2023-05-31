@@ -7,12 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import endava.astrolab.app.mock.DailyImageMock
 import endava.astrolab.app.ui.component.ExpandableImage
 import endava.astrolab.app.ui.component.TextCard
-import endava.astrolab.app.ui.dailyimage.mapper.DailyImageMapper
-import endava.astrolab.app.ui.dailyimage.mapper.DailyImageMapperImpl
 
 @Composable
 fun DailyImageRoute(
@@ -40,4 +36,3 @@ fun DailyImageScreen(
         TextCard(title = dailyImage.title, content = dailyImage.explanation)
     }
 }
-

@@ -1,18 +1,11 @@
 package endava.astrolab.app.ui.lesson
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
-import endava.astrolab.app.mock.LessonsMock
 import endava.astrolab.app.ui.component.WebView
-import endava.astrolab.app.ui.lesson.mapper.LessonMapper
-import endava.astrolab.app.ui.lesson.mapper.LessonMapperImpl
 import java.nio.charset.Charset
 
-val lessonMapper: LessonMapper = LessonMapperImpl()
-val lessonViewState = lessonMapper.toLessonViewState(LessonsMock.getLessonsList()[0])
 @Composable
 fun LessonRoute(
     viewModel: LessonViewModel
@@ -20,13 +13,13 @@ fun LessonRoute(
     // val lessonViewState: LessonViewState by viewModel.lessonViewState.collectAsState()
 
     LessonScreen(
-        lessonViewState
+        // lessonViewState
     )
 }
 
 @Composable
 fun LessonScreen(
-    lessonViewState: LessonViewState,
+    // lessonViewState: LessonViewState,
     /*onLessonClick: (Int) -> Unit,
     * onLessonLongClick: (Int) -> Unit,*/
     modifier: Modifier = Modifier
@@ -40,11 +33,4 @@ fun LessonScreen(
     astronomyBookDataHtmlString = input_stream.readBytes().toString(Charset.defaultCharset())
 
     WebView(astronomyBookDataHtmlString)
-}
-
-@Preview
-@Composable
-fun LessonScreenPreview() {
-
-    LessonScreen(lessonViewState = lessonViewState)
 }

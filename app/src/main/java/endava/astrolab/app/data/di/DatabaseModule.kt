@@ -11,10 +11,10 @@ val databaseModule = module {
     single {
         Room
             .databaseBuilder(
-            androidApplication(),
-            AstrolabDatabase::class.java,
-            APP_DATABASE_NAME,
-        )
+                androidApplication(),
+                AstrolabDatabase::class.java,
+                APP_DATABASE_NAME,
+            )
             .createFromAsset("astrolab_db.db")
             .build()
     }

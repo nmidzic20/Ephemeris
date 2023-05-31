@@ -1,61 +1,71 @@
 package endava.astrolab.app.data.repository
 
+import endava.astrolab.app.data.database.CompletedLessonDAO
+import endava.astrolab.app.data.database.DbCompletedLesson
 import endava.astrolab.app.data.database.LessonDAO
-import endava.astrolab.app.mock.CompletedLessonsDbMock
-import endava.astrolab.app.mock.LessonsMock
 import endava.astrolab.app.model.Lesson
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.shareIn
 
 class FakeLessonRepositoryImpl(
     private val lessonDao: LessonDAO,
+    private val completedLessonDAO: CompletedLessonDAO,
     private val bgDispatcher: CoroutineDispatcher
 ) : LessonRepository {
 
-    private val dbLessonList = lessonDao.lessons()//LessonsMock.getLessonsList().toMutableList()
-
-    private val lessons: Flow<List<Lesson>> = CompletedLessonsDbMock.completedIds
-        .flatMapLatest { completedIds ->
-            dbLessonList.map {
-                it.map { dbLesson ->
+    private val lessons: Flow<List<Lesson>> = lessonDao.lessons().flatMapLatest { dbLessonList ->
+        completedLessonDAO.completed_lessons()
+            .map { dbCompletedLessonList ->
+                dbLessonList.map { dbLesson ->
                     Lesson(
-                        id = dbLesson.id,
-                        title = dbLesson.title,
-                        content = dbLesson.content,
-                        isCompleted = dbLesson.id in completedIds
+                        id = dbLesson.id, title = dbLesson.title, content = dbLesson.content,
+                        isCompleted = dbCompletedLessonList.any { it.id == dbLesson.id }
                     )
                 }
-                //val isCompleted = it.id in completedIds
-                //Lesson(it.id, it.title, it.content, isCompleted)
             }
+    }.flowOn(bgDispatcher)
+
+    private val completedLessons = completedLessonDAO.completed_lessons().map {
+        it.map { dbCompletedLesson ->
+            Lesson(
+                id = dbCompletedLesson.id,
+                title = "",
+                content = "",
+                isCompleted = true,
+            )
         }
-        .flowOn(bgDispatcher)
+    }.shareIn(
+        scope = CoroutineScope(bgDispatcher),
+        started = SharingStarted.WhileSubscribed(1000L),
+        replay = 1,
+    )
+    override fun lessons(): Flow<List<Lesson>> = lessons
+    override fun completedLessons(): Flow<List<Lesson>> = completedLessons
 
     override suspend fun lesson(lessonId: Int) = lessons.map { it ->
         it.first { lesson -> lessonId == lesson.id }
     }.first()
 
-    override fun lessons(): Flow<List<Lesson>> = lessons
-    override fun completedLessons(): Flow<List<Lesson>> = lessons.map {
-        it.filter { fakeLesson: Lesson -> fakeLesson.isCompleted }
-    }
-
     override suspend fun addLessonToCompleted(lessonId: Int) {
-        CompletedLessonsDbMock.insert(lessonId)
+        completedLessonDAO.insertCompletedLesson(DbCompletedLesson(lessonId))
     }
 
     override suspend fun removeLessonFromCompleted(lessonId: Int) {
-        CompletedLessonsDbMock.delete(lessonId)
+        completedLessonDAO.deleteCompletedLesson(lessonId)
     }
 
     override suspend fun toggleCompleted(lessonId: Int) {
-        withContext(bgDispatcher) {
-            if (CompletedLessonsDbMock.completedIds.value.contains(lessonId)) {
-                removeLessonFromCompleted(lessonId)
-            } else {
-                addLessonToCompleted(lessonId)
-            }
-        }
+        val completedLessons = completedLessons.first()
+        if (completedLessons.none { it.id == lessonId })
+            addLessonToCompleted(lessonId)
+        else
+            removeLessonFromCompleted(lessonId)
     }
 }

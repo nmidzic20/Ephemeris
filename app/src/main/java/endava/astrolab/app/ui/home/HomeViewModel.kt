@@ -31,7 +31,7 @@ class HomeViewModel(
                 AlertDialogViewState(
                     showDialog,
                     selectedLesson.title,
-                    "Lesson ${selectedLesson.id}",
+                    "Lesson ${selectedLesson.id + 1}",
                     "Mark as ${if (selectedLesson.isCompleted) "incomplete" else "complete"}",
                     {
                         onCompletedClick(selectedLesson.id)

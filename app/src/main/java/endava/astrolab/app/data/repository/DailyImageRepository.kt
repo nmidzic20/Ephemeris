@@ -1,7 +1,6 @@
 package endava.astrolab.app.data.repository
 
 import endava.astrolab.app.model.DailyImage
-import endava.astrolab.app.model.Lesson
 import kotlinx.coroutines.flow.Flow
 
 interface DailyImageRepository {

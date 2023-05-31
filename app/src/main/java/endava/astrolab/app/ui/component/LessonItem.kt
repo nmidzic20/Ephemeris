@@ -17,9 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import endava.astrolab.app.mock.LessonsMock
 import endava.astrolab.app.ui.theme.DarkGreen
 import endava.astrolab.app.ui.theme.DarkRed
 import endava.astrolab.app.ui.theme.spacing
@@ -63,11 +61,4 @@ fun LessonItem(lessonItemViewState: LessonItemViewState, onClick: () -> Unit, on
                 .background(cardColor)
         )
     }
-}
-
-@Preview
-@Composable
-private fun LessonItemPreview() {
-    val lesson = LessonsMock.getLessonsList()[0]
-    LessonItem(LessonItemViewState(lesson.title, lesson.isCompleted), {}, {})
 }
