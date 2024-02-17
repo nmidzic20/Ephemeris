@@ -1,5 +1,6 @@
 package endava.astrolab.app.ui.main
 
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -23,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +37,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import coil.ImageLoader
+import coil.compose.rememberAsyncImagePainter
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
+import coil.size.Size
 import endava.astrolab.app.R
 import endava.astrolab.app.navigation.LESSON_ID_KEY
 import endava.astrolab.app.navigation.LessonDestination
@@ -72,11 +80,11 @@ fun MainScreen() {
             TopBar(
                 navigationIcon = {
                     if (showBackIcon) BackIcon(onBackClick = navController::popBackStack, Modifier.padding(MaterialTheme.spacing.small))
-                }
+                },
             )
         },
         bottomBar = {
-            if (showBottomBar)
+            if (showBottomBar) {
                 BottomNavigationBar(
                     destinations = listOf(
                         NavigationItem.HomeDestination,
@@ -91,18 +99,19 @@ fun MainScreen() {
                             restoreState = true
                         }
                     },
-                    currentDestination = navBackStackEntry?.destination
+                    currentDestination = navBackStackEntry?.destination,
                 )
-        }
+            }
+        },
     ) { padding ->
         Surface(
             color = MaterialTheme.colors.background,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             NavHost(
                 navController = navController,
                 startDestination = NavigationItem.HomeDestination.route,
-                modifier = Modifier.padding(padding)
+                modifier = Modifier.padding(padding),
             ) {
                 composable(NavigationItem.HomeDestination.route) {
                     HomeRoute(
@@ -110,12 +119,12 @@ fun MainScreen() {
                             val lessonRoute = LessonDestination.createNavigationRoute(lessonId)
                             navController.navigate(lessonRoute)
                         },
-                        viewModel = getViewModel()
+                        viewModel = getViewModel(),
                     )
                 }
                 composable(NavigationItem.DailyImageDestination.route) {
                     DailyImageRoute(
-                        viewModel = getViewModel<DailyImageViewModel>()
+                        viewModel = getViewModel<DailyImageViewModel>(),
                     )
                 }
                 composable(
@@ -127,22 +136,22 @@ fun MainScreen() {
                         parametersOf(selectedLessonId)
                     })
                     LessonRoute(
-                        viewModel = lessonViewModel
+                        viewModel = lessonViewModel,
                     )
                 }
             }
         }
     }
 }
+
 @Composable
 private fun TopBar(
     navigationIcon: @Composable (() -> Unit)? = null,
 ) {
     TopAppBar(modifier = Modifier) {
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             if (navigationIcon != null) {
                 navigationIcon()
@@ -150,11 +159,27 @@ private fun TopBar(
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
+                val context = LocalContext.current
+                val imageLoader = ImageLoader.Builder(context)
+                    .components {
+                        if (Build.VERSION.SDK_INT >= 28) {
+                            add(ImageDecoderDecoder.Factory())
+                        } else {
+                            add(GifDecoder.Factory())
+                        }
+                    }
+                    .build()
                 Image(
-                    painter = painterResource(id = R.drawable.astrolab),
-                    contentDescription = stringResource(R.string.astrolab_logo),
+                    painter = rememberAsyncImagePainter(
+                        ImageRequest.Builder(context).data(data = R.drawable.astrolablogospin).apply(block = {
+                            size(Size.ORIGINAL)
+                        }).build(),
+                        imageLoader = imageLoader,
+                    ),
+                    contentDescription = null,
+                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         }
@@ -169,9 +194,10 @@ private fun BackIcon(
     Icon(
         imageVector = Icons.Default.ArrowBack,
         stringResource(R.string.back),
-        modifier = modifier.clickable { onBackClick() }
+        modifier = modifier.clickable { onBackClick() },
     )
 }
+
 @Composable
 private fun BottomNavigationBar(
     destinations: List<NavigationItem>,
@@ -179,7 +205,7 @@ private fun BottomNavigationBar(
     currentDestination: NavDestination?,
 ) {
     BottomNavigation(
-        backgroundColor = MaterialTheme.colors.background
+        backgroundColor = MaterialTheme.colors.background,
     ) {
         destinations.forEach { destination ->
             val selected = currentDestination?.hierarchy?.any { it.route == destination.route } == true
@@ -189,14 +215,14 @@ private fun BottomNavigationBar(
                 icon = {
                     Icon(
                         painter = painterResource(iconResource),
-                        contentDescription = stringResource(id = destination.labelId)
+                        contentDescription = stringResource(id = destination.labelId),
                     )
                 },
                 label = { Text(stringResource(destination.labelId)) },
                 selected = selected,
                 onClick = {
                     onNavigateToDestination(destination)
-                }
+                },
             )
         }
     }
