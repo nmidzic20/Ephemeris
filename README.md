@@ -2,4 +2,4 @@ Android mobile application for astronomy lessons management (chapter by chapter,
 
 Technologies: Kotlin, Jetpack Compose, Room, Ktor, Koin, Coroutines.
 
-![Demo gif](./demo.gif =250x250)
+<img src="./demo.gif" width="100" height="100">
